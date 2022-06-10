@@ -1,0 +1,1 @@
+export const CERAMIC_NETWORK = 'testnet-clay'

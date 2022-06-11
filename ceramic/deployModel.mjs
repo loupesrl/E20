@@ -15,11 +15,11 @@ const manager = ModelManager.fromJSON({
 // Write model to JSON file
 const aliases = await manager.deploy();
 await writeFile(
-  new URL("../__generated__/aliases.ts", import.meta.url),
+  new URL("../__generated__/aliases.js", import.meta.url),
   `export const aliases = ${JSON.stringify(aliases)}`
 );
 
 console.log(
-  "Model aliases written to src/__generated__/aliases.ts file:",
+  "Model aliases written to /__generated__/aliases.js file:",
   aliases
 );

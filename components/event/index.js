@@ -11,15 +11,16 @@ import Button from "../Button";
 import H1 from "../H1";
 import dynamic from "next/dynamic";
 import ConnectButton from "../ConnectButton";
-import NoEvents from "./NoEvents";
-import CreateEventDialog from "./CreateEventDialog";
+import NoEventInstances from "./NoEventInstances";
+import CreateEventDialog from "./CreateEventInstanceDialog";
 import { useRouter } from "next/router";
 
-export default function Org(props) {
+export default function Event(props) {
   const [connection, connect, disconnect] = useViewerConnection();
   const organizationsRecord = useViewerRecord("organizations");
 
   const [currentOrg, setCurrentOrg] = useState();
+  const [currentEvent, setCurrentEvent] = useState();
 
   useEffect(() => {
     if (organizationsRecord.content) {
@@ -31,9 +32,16 @@ export default function Org(props) {
         }
       );
 
+      const [_currEvent] = _currOrg?.events?.filter((ev) => {
+        const [, eventId] = ev.id.split("ceramic://");
+
+        return eventId === props.eventId;
+      });
+
       setCurrentOrg(_currOrg);
+      setCurrentEvent(_currEvent);
     }
-  }, [organizationsRecord, props.orgId]);
+  }, [organizationsRecord, props.orgId, props.eventId]);
 
   useEffect(() => {
     console.log(currentOrg);
@@ -43,17 +51,22 @@ export default function Org(props) {
   const open = () => setShowDialog(true);
   const close = () => setShowDialog(false);
 
-  console.log(organizationsRecord?.content?.organizations);
+  // console.log(organizationsRecord?.content?.organizations);
 
   // console.log("test", connection?.selfID?.client?.dataModel);
 
-  async function handleEventCreation(name) {
+  async function handleEventInstanceCreation(name) {
     const orgs = organizationsRecord?.content?.organizations;
 
-    const doc = await connection.selfID.client.dataModel.createTile("Event", {
-      name,
-      instances: [],
-    });
+    const doc = await connection.selfID.client.dataModel.createTile(
+      "EventInstance",
+      {
+        name,
+        basicInfos: {},
+        poap: { supply: 0 },
+        polls: [],
+      }
+    );
 
     await organizationsRecord.merge({
       organizations: orgs.map((org) => {
@@ -62,7 +75,27 @@ export default function Org(props) {
         if (orgId === props.orgId) {
           return {
             ...org,
-            events: [...(org?.events ?? []), { id: doc.id.toUrl(), name }],
+            events: org.events.map((ev) => {
+              const [, evId] = ev.id.split("ceramic://");
+
+              if (evId === props.eventId) {
+                return {
+                  ...ev,
+                  instances: [
+                    ...(ev?.instances ?? []),
+                    {
+                      id: doc.id.toUrl(),
+                      name,
+                      basicInfos: {},
+                      poap: { supply: 0 },
+                      polls: [],
+                    },
+                  ],
+                };
+              }
+
+              return ev;
+            }),
           };
         }
 
@@ -74,35 +107,40 @@ export default function Org(props) {
   return (
     <div
       className={`container mx-auto py-10 flex flex-col grow relative ${
-        (currentOrg?.events?.length ?? 0) === 0
+        (currentEvent?.instances?.length ?? 0) === 0
           ? "items-center justify-center gap-8"
           : ""
       }`}
     >
       {connection.status === "connected" ? (
-        (currentOrg?.events?.length ?? 0) === 0 ? (
-          <NoEvents onCreateConfirm={(name) => handleEventCreation(name)} />
+        (currentEvent?.instances?.length ?? 0) === 0 ? (
+          <NoEventInstances
+            onCreateConfirm={(name) => handleEventInstanceCreation(name)}
+          />
         ) : (
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-3">
-              <H1>Your events</H1>
+              <H1>Your event instances</H1>
             </div>
-            {currentOrg?.events.map((ev, i) => (
+            {currentEvent?.instances.map((instance, i) => (
               <Link
                 key={i}
-                href={`/orgs/${props.orgId}/events/${
-                  ev.id.split("ceramic://")[1]
+                href={`/orgs/${props.orgId}/events/${props.eventId}/instances/${
+                  instance.id.split("ceramic://")[1]
                 }`}
               >
-                <a className="border rounded-md p-4 shadow-lg">{ev.name}</a>
+                <a className="border rounded-md p-4 shadow-lg">
+                  {instance.name}
+                </a>
               </Link>
             ))}
+
             <Button variant="fab" onClick={() => open()}>
               Create
             </Button>
 
             <CreateEventDialog
-              onCreateConfirm={(name) => handleEventCreation(name)}
+              onCreateConfirm={(name) => handleEventInstanceCreation(name)}
               showDialog={showDialog}
               close={() => close()}
             />

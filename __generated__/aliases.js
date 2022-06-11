@@ -1,16 +1,1 @@
-export const aliases = {
-  definitions: {
-    organizations:
-      "kjzl6cwe1jw146j3k77wrubr28udl8gsp3wu6wh7z3z3nz0jxm8vzpdk6o0o1xh",
-  },
-  schemas: {
-    Organization:
-      "ceramic://k3y52l7qbv1frxxyiw154igca9j1sx1xa6pgmj0nk3dr2gj5tvc5mtz3gehmcy2gw",
-    Organizations:
-      "ceramic://k3y52l7qbv1fryc116w6twma94ip2zn4qi7i8f4g5cx8numw6scbmyh3z5ojy2i2o",
-  },
-  tiles: {
-    placeholderOrganization:
-      "kjzl6cwe1jw1488pqkab4js6uaqs8t69k6xdkmh0u65shxthdwa7wgjnacda7c0",
-  },
-};
+export const aliases = {"definitions":{"organizations":"kjzl6cwe1jw148t7lq55nrnuhwukehvjn9sns2dxcs1bqm7ouwjvpkbepme6piy"},"schemas":{"EventInstance":"ceramic://k3y52l7qbv1fry4dylq9vihttzgb6h0czn4e0jdl41s41hb5judk2db9qpwjur1fk","Event":"ceramic://k3y52l7qbv1fry7a4f6l78mzt4ywjeqig78gh46r72xwzms6pldc314lr9s333pq8","Organization":"ceramic://k3y52l7qbv1fryo19m139b9not3xhaair5hind5w9xc8hzwbcpa8fmwiu5gyge1og","Organizations":"ceramic://k3y52l7qbv1frycbnrklwrw8t0ybaijll1eodn34pw8c8qwq096ravdt8milm7bpc"},"tiles":{"placeholderOrganization":"kjzl6cwe1jw14bhn61k79btx20h4wajo7w20h3eahqi29r2i0ktskxqlu67jdqm"}}

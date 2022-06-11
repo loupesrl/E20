@@ -31,7 +31,7 @@ ceramic.did = did;
 const manager = new ModelManager({ ceramic });
 
 // Create the schemas
-const eventInstanceSchemaID = await manager.createSchema("Event", {
+const eventInstanceSchemaID = await manager.createSchema("EventInstance", {
   $schema: "http://json-schema.org/draft-07/schema#",
   title: "EventInstance",
   type: "object",
@@ -100,24 +100,58 @@ const eventInstanceSchemaID = await manager.createSchema("Event", {
         },
         supply: {
           type: "number",
-          format: "supply",
+          title: "supply",
           minimum: 0,
         },
         picture: {
           type: "string",
-          format: "date-time",
-          title: "toDatetime",
-          maxLength: 30,
+          format: "uri",
+          pattern: "^https?://",
         },
         poapContractAddress: {
           type: "string",
           title: "poapContractAddress",
-          pattern: "^https?://",
+          pattern: "^0x[0-9a-zA-Z]{40}$",
         },
         poapEventId: {
           type: "number",
           title: "poapEventId",
           minimum: 0,
+        },
+      },
+    },
+    polls: {
+      type: "array",
+      title: "polls",
+      items: {
+        type: "object",
+        title: "poll",
+        properties: {
+          question: {
+            type: "string",
+            title: "question",
+            maxLength: 256,
+          },
+          options: {
+            type: "array",
+            title: "options",
+            items: {
+              type: "object",
+              title: "option",
+              properties: {
+                id: {
+                  type: "number",
+                  title: "optionId",
+                  minimum: 0,
+                },
+                name: {
+                  type: "string",
+                  title: "name",
+                  maxLength: 128,
+                },
+              },
+            },
+          },
         },
       },
     },

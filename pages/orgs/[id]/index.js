@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 
-const Org = dynamic(() => import("../../components/org"), { ssr: false });
+const Org = dynamic(() => import("../../../components/org"), { ssr: false });
 
 export default function OrgPage({ orgId }) {
   return <Org orgId={orgId} />;

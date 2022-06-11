@@ -8,7 +8,7 @@ describe("Greeter", function () {
     const PollManager = await hre.ethers.getContractFactory("PollManager");
     const pollManager = await PollManager.deploy();
     await pollManager.deployed();
-    let createPollTx = await pollManager.createPoll("0x22C1f6050E56d2876009903609a2cC3fEf83B415", 42882)
+    let createPollTx = await pollManager.createPoll("0x22C1f6050E56d2876009903609a2cC3fEf83B415", 42882, 4)
     await createPollTx.wait()
 
     const accounts = await ethers.getSigners()
@@ -29,12 +29,12 @@ describe("Greeter", function () {
       domain: {
         name: 'Vote',
         version: '1',
-        chainId: 1,
+        chainId: 31337,
         verifyingContract: pollManager.address
       },
       message: {
         poll: 1,
-        answer: 1
+        answer: 2
       }
     };
 
@@ -53,7 +53,7 @@ describe("Greeter", function () {
     let addVoteTx = await pollManager.addVote(
       {
         poll: 1,
-        answer: 1
+        answer: 2
       },
       parseInt(v, 16),
       r,
@@ -62,9 +62,9 @@ describe("Greeter", function () {
 
     await addVoteTx.wait()
 
-    console.log(await pollManager.getAnswersCount(1, 1))
+    console.log(await pollManager.getAnswersCount(1, 2))
 
-    let addVoteTx2 = await pollManager.addVote(
+    /* let addVoteTx2 = await pollManager.addVote(
       {
         poll: 1,
         answer: 1
@@ -72,9 +72,9 @@ describe("Greeter", function () {
       parseInt(v, 16),
       r,
       s
-    )
+    ) */
 
-    console.log(await pollManager.getAnswersCount(1, 1))
+    // console.log(await pollManager.getAnswersCount(1, 1))
 
 
   });

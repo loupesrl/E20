@@ -6,20 +6,12 @@
 const hre = require("hardhat");
 
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
-
-  // We get the contract to deploy
   const PollManager = await hre.ethers.getContractFactory("PollManager");
-  const greeter = await PollManager.deploy();
-
-  await greeter.deployed();
-
-  console.log("PollManager deployed to:", greeter.address);
+  const pollManager = await PollManager.deploy();
+  await pollManager.deployed();
+  let createPollTx = await pollManager.createPoll("0x22C1f6050E56d2876009903609a2cC3fEf83B415", 42882, 4)
+  await createPollTx.wait()
+  console.log(pollManager.address)
 }
 
 // We recommend this pattern to be able to use async/await everywhere

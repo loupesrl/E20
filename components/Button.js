@@ -11,7 +11,7 @@ export default function Button({ children, variant = "primary", ...props }) {
     style = "bg-white text-stone-700 border border-stone-700";
 
   return (
-    <button {...props} className={`text-xl ${style} rounded-md py-3 px-6`}>
+    <button {...props} className={`text-xl ${style} ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''} rounded-md py-3 px-6`}>
       {children}
     </button>
   );

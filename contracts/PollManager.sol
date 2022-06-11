@@ -40,7 +40,7 @@ contract PollManager {
             EIP712Domain({
                 name: "Vote",
                 version: "1",
-                chainId: 1,
+                chainId: 31337,
                 verifyingContract: address(this)
             })
         );
@@ -83,6 +83,7 @@ contract PollManager {
     struct Poll {
         address poapAddress;
         uint256 poapEventId;
+        uint256 answersAvailable;
     }
 
     //
@@ -91,10 +92,15 @@ contract PollManager {
     uint256 pollCount = 1;
     mapping(uint256 => Poll) polls;
 
-    function createPoll(address poapAddress, uint256 poapEventId) external {
+    function createPoll(
+        address poapAddress,
+        uint256 poapEventId,
+        uint256 answersAvailable
+    ) external {
         polls[pollCount] = Poll({
             poapAddress: poapAddress,
-            poapEventId: poapEventId
+            poapEventId: poapEventId,
+            answersAvailable: answersAvailable
         });
         pollCount++;
     }

@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Answer from "./Answer";
 import { ethers } from "ethers"
 import pollContractABI from "../artifacts/contracts/PollManager.sol/PollManager.json"
 import H1 from "./H1"
 import Button from "./Button"
+import { WalletContext, getBurnerWallet } from "../utils/burnerWallet";
 
 const pollContractAddress = '0x99bbA657f2BbC93c02D617f8bA121cB8Fc104Acf'
 
@@ -31,6 +32,16 @@ const POLL_STATUS = {
 
 function Poll() {
 
+  const { wallet, setWallet } = useContext(WalletContext)
+
+  useEffect(() => {
+    async function loadWallet() {
+      const _wallet = await getBurnerWallet()
+      setWallet(_wallet)
+    }
+    loadWallet()
+  }, [setWallet])
+
   const [pollStatus, setPollStatus] = useState(POLL_STATUS.WAITING)
   const [answers, setAnswers] = useState({})
   const [selectedAnswer, setSelectedAnswer] = useState(null)
@@ -57,7 +68,7 @@ function Poll() {
 
   async function sendVote(pollId, answer) {
 
-    let signer = await getSigner()
+    let signer = wallet
 
     const typedData = {
       types: {
@@ -112,11 +123,6 @@ function Poll() {
       setPollStatus(POLL_STATUS.ERROR)
     }
   }
-  useEffect(() => {
-    async function a() { }
-
-    a()
-  }, [])
 
   const pollId = 1
 

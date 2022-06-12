@@ -7,7 +7,6 @@ import Input from "../Input";
 import DatetimeInput from "./DatetimeInput";
 
 function BasicInfos(props) {
-  const [connection, connect, disconnect] = useViewerConnection();
   const organizationsRecord = useViewerRecord("organizations");
 
   const [from, setFrom] = useState(
@@ -24,8 +23,6 @@ function BasicInfos(props) {
   );
 
   async function updateInstance() {
-    console.log(organizationsRecord);
-
     await organizationsRecord.merge({
       organizations: organizationsRecord.content.organizations.map((org) => {
         const [, orgId] = org.id.split("ceramic://");
